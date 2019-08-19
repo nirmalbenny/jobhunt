@@ -220,6 +220,7 @@ def manageJob():
 		user=Employer.query.get(current_user.get_id())
 		if not user.user_roll()=="Employer":
 			return "You Don't Permission To Access This Page";
+
 		jobs=Job.query.filter_by(user_id=current_user.get_id()).all()
 		# for j in jobs:
 		# 	print(j.title)
@@ -237,7 +238,7 @@ def manageJob():
 #--------VIEW JOB-------
 @app.route('/jobs/<jobid>')
 def job(jobid):
-	job=Job.query.get(jobid).first_or_404()
+	job=Job.query.filter_by(id=jobid).first_or_404()
 	company=Employer.query.get(job.id)
 	return render_template("job.html",details=job,emp=company)
 
@@ -250,7 +251,9 @@ def deleteJob(jobid):
 		user=Employer.query.get(current_user.get_id())
 		print("user role : "+ user.user_roll())
 		if not user.user_roll()=="Employer":
-			return "test1"
+			return "Access Denied"
+	else:
+		return redirect(url_for('login_companies'))
 
 	job=Job.query.filter_by(id=jobid).first_or_404()
 
@@ -264,6 +267,26 @@ def deleteJob(jobid):
 		return redirect(url_for('manageJob'))
 	else:
 		return " You Dont Have Permission  to do this operation "
+
+@app.route('/jobs/manage/edit/<jobid>')
+def editJob(jobid):
+	print(" job id : "+str(jobid))
+	user=Employer.query.get(current_user.get_id())
+	if current_user.is_authenticated:
+		
+		if not user.user_roll()=="Employer":
+			return "Access Denied"
+	else:
+		return redirect(url_for('login_companies'))
+	jobdet=Job.query.filter_by(id=jobid).first_or_404();
+	print(jobdet)
+	print(jobdet.title)
+	print(jobdet.salary)
+	return render_template('editJob.html',user=user,job=jobdet)
+
+
+
+
 
 
 
