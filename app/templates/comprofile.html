@@ -1,0 +1,153 @@
+{% extends "empbase.html" %} 
+{% block content %}
+
+<div class="col-lg-9 column">
+				 		<div class="padding-left">
+					 		<div class="profile-title" id="mp">
+					 			<h3>My Profile</h3>
+					 			<div class="upload-img-bar">
+					 				<span><img src="/static/images/resource/up1.jpg" alt="" /><i>x</i></span>
+					 				<div class="upload-info">
+					 					<a href="#" title="">Browse</a>
+					 					<span>Max file size is 1MB, Minimum dimension: 270x210 And Suitable files are .jpg & .png</span>
+					 				</div>
+					 			</div>
+					 			<div class="upload-img-bar">
+					 				<span><img src="/static/images/resource/up2.jpg" alt="" /><i>x</i></span>
+					 				<div class="upload-info">
+					 					<a href="#" title="">Browse</a>
+					 					<span>Max file size is 1MB, Minimum dimension: 270x210 And Suitable files are .jpg & .png</span>
+					 				</div>
+					 			</div>
+					 		</div>
+                           <div class="row">
+                           	<div class="col-lg-12">
+                           		
+                           			<h4 style="position: relative; left: 120%; margin-top:50px;">KINDLY UPDATE YOUR 
+                           			PROFILE</h4>
+                           		
+                           	</div>
+                           </div>
+
+					 		<div class="profile-form-edit">
+					 			<form id="bform" action="/companies/edit/profile" method="POST">
+					 				<div class="row">
+					 					<div class="col-lg-6">
+					 						<span class="pf-title">Company Name</span>
+					 						<div class="pf-field">
+					 							<input type="text" id="bname" name="name" value="{{user.name}}" placeholder="Enter company name" />
+					 							 					 						</div>
+					 					</div>
+					 					<!-- <div class="col-lg-6">
+					 						<span class="pf-title">Allow In Search</span>
+					 						<div class="pf-field">
+					 							<select data-placeholder="Please Select Specialism" class="chosen">
+													<option>Web Development</option>
+													<option>Web Designing</option>
+													<option>Art & Culture</option>
+													<option>Reading & Writing</option>
+												</select>
+					 						</div>
+					 					</div> -->
+					 					<div class="col-lg-3">
+					 						<span class="pf-title">Since</span>
+					 						<div class="pf-field">
+					 							<input type="text" value="{{user.since}}" id="bsince" name="since" placeholder="1991" />
+					 						</div>
+					 					</div>
+					 					<div class="col-lg-3">
+					 						<span class="pf-title">Team Size</span>
+					 						<div class="pf-field">
+					 							<input type="text" value="{{user.teamSize}}" id="bsize" name="size" placeholder="100 - 201" />
+					 						</div>
+					 					</div>
+					 					<div class="col-lg-12">
+					 						<span class="pf-title" style="border: 1px solid green; padding: 20px; color:green; ">Company Domain : {{user.domain}} | Change domain below</span>
+					 						<div class="pf-field">
+					 							<select id="bdomain" data-placeholder="Select from the list to update" class="chosen" name="domain">
+													<option value="Web Development">Web Development</option>
+													<option value="Web Designing">Web Designing</option>
+													<option value="Legal">Legal</option>
+													<option value="Finance">Finance</option>
+													<option value="Event management">Event Managemnt</option>
+													<option value="Event management">Event Managemnt</option>
+												</select>
+					 						</div>
+					 					</div>
+					 					<!-- <div class="col-lg-12">
+					 						<span class="pf-title">Categories</span>
+					 						<div class="pf-field no-margin">
+						 						<ul class="tags">
+										           <li class="addedTag">Web Deisgn<span onclick="$(this).parent().remove();" class="tagRemove">x</span><input type="hidden" name="tags[]" value="Web Deisgn"></li>
+										            <li class="addedTag">Web Develop<span onclick="$(this).parent().remove();" class="tagRemove">x</span><input type="hidden" name="tags[]" value="Web Develop"></li>
+										            <li class="addedTag">SEO<span onclick="$(this).parent().remove();" class="tagRemove">x</span><input type="hidden" name="tags[]" value="SEO"></li>
+							            			<li class="tagAdd taglist">  
+							              				 <input type="text" id="search-field">
+										            </li>
+												</ul>
+											</div>
+					 					</div> -->
+					 					<div class="col-lg-12">
+					 						<span class="pf-title">Description</span>
+					 						<div class="pf-field">
+					 							<textarea id="bdes" name="description">{{user.desc}}</textarea>
+					 						</div>
+					 					</div>
+					 					<input type="hidden" id="basic" name="type" value="basic">
+					 					<div class="col-lg-12">
+					 						<button  id="bsumbit" type="submit">Update</button>
+					 					</div>
+					 				</div>
+
+
+
+
+
+					 			</form>
+					 		</div>
+					 		 
+					 		<div class="contact-edit" id="ci">
+					 			<h3>Contact</h3>
+					 			<form action="/companies/edit/profile" method="POST">
+
+					 				<input type="hidden" id="basic" name="type" value="contact">
+					 				<div class="row">
+					 					<div class="col-lg-4">
+					 						<span class="pf-title">Phone</span>
+					 						<div class="pf-field">
+					 							<input type="text" value="{{user.phone}}" name="phone" placeholder="+90 538 963 58 96" />
+					 						</div>
+					 					</div>
+					 					<div class="col-lg-4">
+					 						<span class="pf-title">Email</span>
+					 						<div class="pf-field">
+					 							<input type="text" value="{{user.email}}" name="email" placeholder="demo@demo.com" />
+					 						</div>
+					 					</div>
+					 					<div class="col-lg-4">
+					 						<span class="pf-title">Website</span>
+					 						<div class="pf-field">
+					 							<input type="text" value="{{user.website}}" name="website" placeholder="www.yourwebsite.com" />
+					 						</div>
+					 					</div>
+					 					<div class="col-lg-6">
+					 						<span class="pf-title">Company Bio</span>
+					 						<div class="pf-field">
+					 							<textarea name="address" placeholder="enter description about your com">{{user.address}}</textarea>
+					 						</div>
+					 					</div>
+					 					 
+					 					 
+					 					<div class="col-lg-12">
+					 						<button type="submit">Update</button>
+					 					</div>
+					 				</div>
+					 			</form>
+					 		</div>
+					 	</div>
+					</div>
+				 </div>
+
+
+{% endblock %}		
+				 	

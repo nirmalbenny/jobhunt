@@ -1,0 +1,161 @@
+
+{% extends "pubbase.html" %}
+{% block content %}
+<section class="overlape">
+		<div class="block no-padding">
+			<div data-velocity="-.1" style="background: url(/static/images/resource/mslider1.jpg) repeat scroll 50% 422.28px transparent;" class="parallax scrolly-invisible no-parallax"></div><!-- PARALLAX BACKGROUND IMAGE -->
+			<div class="container fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="inner-header">
+							<h3>{{ details.title }}</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="block">
+			<div class="container">
+				<div class="row">
+				 	<div class="col-lg-12 column">
+				 		<div class="job-single-sec style3">
+				 			<div class="job-head-wide">
+				 				<div class="row">
+				 					<div class="col-lg-8">
+				 						<div class="job-single-head3">
+							 				<div class="job-thumb"> <img src="/static/images/resource/sdf.png" alt="" /><span>{{ details.openings }}</span> </div>
+							 				<div class="job-single-info3">
+							 					<h3>{{ emp.name }}</h3>
+							 					<span><i class="la la-map-marker"></i>{{details.city}}</span><span class="job-is ft">Full time</span>
+							 					<ul class="tags-jobs">
+								 					<!-- <li><i class="la la-file-text"></i> Applications 1</li> -->
+								 					<li><i class="la la-calendar-o"></i> Post Date: July 29, 2017</li>
+								 					 
+								 				</ul>
+							 				</div>
+							 			</div><!-- Job Head -->
+				 					</div>
+				 					<div class="col-lg-4">
+				 						<a class="apply-thisjob" href="#" title=""><i class="la la-paper-plane"></i>Apply for job</a>
+								 		<div class="apply-alternative">
+								 			<!-- <a href="#" title=""><i class="fa fa-linkedin"></i> Apply with Linkedin</a> -->
+								 			<!-- <span><i class="la la-heart-o"></i> Shortlist</span> -->
+								 		</div>
+				 					</div>
+				 				</div>
+				 			</div>
+				 			<div class="job-wide-devider">
+							 	<div class="row">
+							 		<div class="col-lg-8 column">		
+							 			<div class="job-details">
+							 				<h3>Job Description</h3>
+							 				
+							 				<textarea readonly rows="20" cols="20">
+							 					{{details.jobdesc}}
+
+							 				</textarea>
+							 			</div>
+							 			<div class="share-bar">
+							 				<span>Share</span><a href="#" title="" class="share-fb"><i class="fa fa-facebook"></i></a><a href="#" title="" class="share-twitter"><i class="fa fa-twitter"></i></a>
+							 			</div>
+							 		<!-- 	<div class="extra-job-info">
+								 			<span><i class="la la-clock-o"></i><strong>35</strong> Days</span>
+								 			<span><i class="la la-file-text"></i><strong>300-500</strong> Application</span>
+								 			<span><i class="la la-search-plus"></i><strong>35697</strong> Displayed</span>
+								 		</div> -->
+								 		<div class="recent-jobs">
+							 				<h3>Recent Jobs</h3>
+							 				<div class="job-list-modern">
+											 	<div class="job-listings-sec no-border">
+													<div class="job-listing wtabs">
+														<div class="job-title-sec">
+															<div class="c-logo"> <img src="/static/images/resource/l1.png" alt="" /> </div>
+															<h3><a href="#" title="">Web Designer / Developer</a></h3>
+															<span>Massimo Artemisis</span>
+															<div class="job-lctn"><i class="la la-map-marker"></i>Sacramento, California</div>
+														</div>
+														<div class="job-style-bx">
+															<span class="job-is ft">Full time</span>
+															<span class="fav-job"><i class="la la-heart-o"></i></span>
+															<i>5 months ago</i>
+														</div>
+													</div>
+													<div class="job-listing wtabs">
+														<div class="job-title-sec">
+															<div class="c-logo"> <img src="/static/images/resource/l2.png" alt="" /> </div>
+															<h3><a href="#" title="">C Developer (Senior) C .Net</a></h3>
+															<span>Massimo Artemisis</span>
+															<div class="job-lctn"><i class="la la-map-marker"></i>Sacramento, California</div>
+														</div>
+														<div class="job-style-bx">
+															<span class="job-is pt ">Part time</span>
+															<span class="fav-job"><i class="la la-heart-o"></i></span>
+															<i>5 months ago</i>
+														</div>
+													</div><!-- Job -->
+													<div class="job-listing wtabs">
+														<div class="job-title-sec">
+															<div class="c-logo"> <img src="/static/images/resource/l3.png" alt="" /> </div>
+															<h3><a href="#" title="">Regional Sales Manager South</a></h3>
+															<span>Massimo Artemisis</span>
+															<div class="job-lctn"><i class="la la-map-marker"></i>Sacramento, California</div>
+														</div>
+														<div class="job-style-bx">
+															<span class="job-is ft ">Full time</span>
+															<span class="fav-job"><i class="la la-heart-o"></i></span>
+															<i>5 months ago</i>
+														</div>
+													</div><!-- Job -->
+													<div class="job-listing wtabs">
+														<div class="job-title-sec">
+															<div class="c-logo"> <img src="/static/images/resource/l4.png" alt="" /> </div>
+															<h3><a href="#" title="">Marketing Dairector</a></h3>
+															<span>Massimo Artemisis</span>
+															<div class="job-lctn"><i class="la la-map-marker"></i>Sacramento, California</div>
+														</div>
+														<div class="job-style-bx">
+															<span class="job-is ft ">Full time</span>
+															<span class="fav-job"><i class="la la-heart-o"></i></span>
+															<i>5 months ago</i>
+														</div>
+													</div><!-- Job -->
+												</div>
+											 </div>
+							 			</div>
+							 		</div>
+							 		<div class="col-lg-4 column">
+							 			<div class="job-overview">
+								 			<h3>Job Overview</h3>
+								 			<ul>
+								 				<li><i class="la la-money"></i><h3>Offerd Salary</h3><span>{{details.salary}}</span></li>
+								 				<!-- <li><i class="la la-mars-double"></i><h3>Gender</h3><span>Female</span></li> -->
+								 				<li><i class="la la-thumb-tack"></i><h3>Career Level</h3><span>{{details.career_level}}</span></li>
+								 				<li><i class="la la-puzzle-piece"></i><h3>Category</h3><span>{{details.category}}</span></li>
+								 				<li><i class="la la-shield"></i><h3>Experience</h3><span>{{details.exp}}</span></li>
+								 				<li><i class="la la-line-chart "></i><h3>Qualification</h3><span>{{details.qualification}}</span></li>
+								 			</ul>
+								 		</div><!-- Job Overview -->
+								 		<div class="quick-form-job">
+								 			<h3>Contact</h3>
+								 			<form>
+								 				<input type="text" placeholder="Enter your Name *" />
+								 				<input type="text" placeholder="Email Address*" />
+								 				<input type="text" placeholder="Phone Number" />
+								 				<textarea placeholder="Message should have more than 50 characters"></textarea>
+								 				<button class="submit">Send Email</button>
+								 				<span>You accepts our <a href="#" title="">Terms and Conditions</a></span>
+								 			</form>
+								 		</div>
+							 		</div>
+							 	</div>
+							 </div>
+					 	</div>
+				 	</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	{% endblock %}
