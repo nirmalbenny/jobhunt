@@ -34,7 +34,7 @@ def index():
 # signup for the companies are done at /register page
 @app.route('/register')
 def register():
-	return render_template('signup.html')
+	return render_template('signup1.html')
 #********************************************************************************************************
 
 
@@ -274,7 +274,7 @@ def editJob(jobid):
 	user=Employer.query.get(current_user.get_id())
 	if current_user.is_authenticated:
 		
-		if not user.user_roll()=="Employer":
+		if not Employer.user_roll()=="Employer":
 			return "Access Denied"
 	else:
 		return redirect(url_for('login_companies'))
@@ -284,14 +284,49 @@ def editJob(jobid):
 	print(jobdet.salary)
 	return render_template('editJob.html',user=user,job=jobdet)
 
-
-
-
-
-
-
-
-
+@app.route('/jobs/manage/edit/update/<jobid>',methods=['POST','GET'])
+def updateJob(jobid):
+	if request.method=='POST':
+		print(" job id : "+str(jobid))
+		user=Employer.query.get(current_user.get_id())
+		if current_user.is_authenticated:
+		
+			if not Employer.user_roll()=="Employer":
+				return "Access Denied"
+		else:
+			return redirect(url_for('login_companies'))
+		req=request.form
+		job=Job.query.filter_by(id=jobid).first_or_404();
+		if job['title'] is not None:
+			job['title']=req['title']
+		if job['jobdesc'] is not None:
+			job['jobdesc']=req['description']
+		if job['email'] is not None:
+			job['email']=req['email']
+		if job['type'] is not None:
+			job['type']=req['type']
+		if job['category'] is not None:
+			job['category']=req['category']
+		if job['experience'] is not None:
+			job['experience']=req['experience']
+		if job['salary'] is not None:
+			job['salary']=req['salary']
+		if job['clevel'] is not None:
+			job['clevel']=req['clevel']
+		if job['industry'] is not None:
+			job['industry']=req['clevel']
+		if job['qualification'] is not None:
+			job['qualification']=req['qualification']
+		if job['deadline'] is not None:
+			job['deadline']=req['deadline']
+		if job['country'] is not None:
+			job['country']=req['country']
+		if job['city'] is not None:
+			job['city']=req['city']
+		if job['address'] is not None:
+			job['address']=req['address']
+		if job['openings'] is not None:
+			job['openings']=req['openings']
 
 #---------------------------------------LOGOUT PAGE-----------------------------------------------------
 

@@ -21,7 +21,7 @@
 					 			</div> -->
 					 		</div>
 					 		<div class="profile-form-edit">
-					 			<form method="post" action="{{url_for('addjob')}}">
+					 			<form method="post" action="{{url_for('updateJob')}}">
 					 				<div class="row">
 					 					<div class="col-lg-12">
 
@@ -76,7 +76,7 @@
 					 					<div class="col-lg-6">
 					 						<span class="pf-title">Categories</span>
 					 						<div class="pf-field">
-					 							<select name="category" data-placeholder="Please Select Specialism" class="chosen">
+					 							<select name="category" data-placeholder="Please Select Specialism"  class="chosen">
 													<option value="IT">IT</option>
 													<option value="Web Designing">Web Designing</option>
 													<option value="Art & Culture">Art & Culture</option>
@@ -151,7 +151,7 @@
 					 					<div class="col-lg-12">
 					 						<span class="pf-title">Application Deadline Date</span>
 					 						<div class="pf-field">
-					 							<input type="date" name="deadline" placeholder="2000/"  class=" " />
+					 							<input required type="date" name="deadline" placeholder="2000/"  class=" " />
 					 						</div>
 					 					</div>
 					 					<div class="col-lg-12">
