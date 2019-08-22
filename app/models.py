@@ -10,28 +10,20 @@ from datetime import datetime,date
 #------------------BASIC COMPANY USER DETAILS-------------------
 @login.user_loader
 def load_user(id):
-	return Employer.query.get(int(id))
-
-class Employer(UserMixin,db.Model):
+	return User.query.get(int(id))
+class User(UserMixin,db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(64), index=True, unique=True, nullable=False)
-	email = db.Column(db.String(128), index=True, unique=True, nullable=False)
+	email = db.Column(db.String(256), index=True, unique=True, nullable=False)
+	user_type=db.Column(db.String(64))
+	third_party_login = db.Column(db.Boolean,default=False)
 	password_hash=db.Column(db.String(128), index=True)
-	since=db.Column(db.String(64))
-	teamSize=db.Column(db.String(64))
-	domain=db.Column(db.String(64))
-	desc=db.Column(db.String(3024))
-	phone=db.Column(db.String(15))
-	website=db.Column(db.String(256))
-	address=db.Column(db.String(512))
-	role=db.Column(db.String(20))
-	logo_url=db.Column(db.String,default=None,nullable=True)
-	logo_img_name=db.Column(db.String,default=None,nullable=True)
-	posts=db.relationship('Job', backref='employer')
+	#relationship-----------------
+	user=db.relationship('Employer', backref='user')
+	# user=db.relationship('Employer', backref='employer')
 
 	def user_roll(self):
-		return self.role
-	
+		return self.user_type
+
 	#-----------Password Hashing---------------------------------
 	def set_password(self, password):
 		self.password_hash = generate_password_hash(password)
@@ -39,8 +31,25 @@ class Employer(UserMixin,db.Model):
 
 	def check_password(self, password):
 		return check_password_hash(self.password_hash, password)
-#-------------------
-class Job(UserMixin,db.Model):
+
+
+class Employer(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(64), index=True, unique=True, nullable=False)
+	since=db.Column(db.String(64))
+	teamSize=db.Column(db.String(64))
+	domain=db.Column(db.String(64))
+	desc=db.Column(db.String(3024))
+	phone=db.Column(db.String(15))
+	website=db.Column(db.String(256))
+	address=db.Column(db.String(512))
+	logo_url=db.Column(db.String,default=None,nullable=True)
+	logo_img_name=db.Column(db.String,default=None,nullable=True)
+	#----------------------Relationship----------------------
+	posts=db.relationship('Job', backref='employer')
+	user_id=db.Column(db.Integer,db.ForeignKey('user.id'))
+	#-------------------
+class Job(db.Model):
 	# __table__='job'
 	id=db.Column(db.Integer,primary_key=True) 
 	title=db.Column(db.String(100))	
@@ -57,10 +66,12 @@ class Job(UserMixin,db.Model):
 	expiry_date=db.Column(db.DateTime)	
 	openings=db.Column(db.Integer)
 	category=db.Column(db.String(128))
-	user_id=db.Column(db.Integer,db.ForeignKey('employer.id'))
 	country=db.Column(db.String(100))
 	city=db.Column(db.String(100))
 	active=db.Column(db.Boolean,default=True);
+
+	#--------------RELATIONSHIP------------------------------
+	user_id=db.Column(db.Integer,db.ForeignKey('employer.id'))
     
 	 
 
