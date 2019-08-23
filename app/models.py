@@ -5,20 +5,21 @@ from app import login
 from datetime import datetime,date
 
 
-
-
 #------------------BASIC COMPANY USER DETAILS-------------------
 @login.user_loader
 def load_user(id):
 	return User.query.get(int(id))
-class User(UserMixin,db.Model):
+
+
+class User(db.Model,UserMixin):
+	__tablename__ ='user'
 	id = db.Column(db.Integer, primary_key=True)
 	email = db.Column(db.String(256), index=True, unique=True, nullable=False)
 	user_type=db.Column(db.String(64))
 	third_party_login = db.Column(db.Boolean,default=False)
 	password_hash=db.Column(db.String(128), index=True)
 	#relationship-----------------
-	user=db.relationship('Employer', backref='user')
+	useremp=db.relationship('Employer', backref='user')
 	# user=db.relationship('Employer', backref='employer')
 
 	def user_roll(self):

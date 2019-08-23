@@ -21,7 +21,7 @@
 					 			</div> -->
 					 		</div>
 					 		<div class="profile-form-edit">
-					 			<form method="post" action="{{url_for('updateJob')}}">
+					 			<form method="post" action="{{url_for('updateJob',jobid=job.id)}}">
 					 				<div class="row">
 					 					<div class="col-lg-12">
 
@@ -426,18 +426,20 @@
 					 					<div class="col-lg-6">
 					 						<span class="pf-title">City</span>
 					 						<div class="pf-field">
-					 							<select name="city" data-placeholder="Please Select Specialism" class="chosen">
+					 							<!-- <select name="city" data-placeholder="Please Select Specialism" class="chosen">
 													<option>Web Development</option>
 													<option>Web Designing</option>
 													<option>Art & Culture</option>
 													<option>Reading & Writing</option>
-												</select>
+												</select> -->
+												<input required type="text" name="city" placeholder="City"  class=" " />
+
 					 						</div>
 					 					</div>
 					 					<div class="col-lg-12">
 					 						<span class="pf-title">Complete Address</span>
 					 						<div class="pf-field">
-					 							<textarea name="address">Collins Street West, Victoria 8007, Australia.</textarea>
+					 							<textarea name="address" placeholder="Collins Street West, Victoria 8007, Australia."></textarea>
 					 						</div>
 					 					</div>
 					 					<div class="col-lg-12">
