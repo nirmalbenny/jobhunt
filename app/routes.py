@@ -4,7 +4,7 @@
 
 from app import app 
 from flask import render_template,request,flash,redirect,url_for,session
-from app.models import Employer,Job
+from app.models import Employer,Job,User
 from app import db
 from flask_login import current_user, login_user, logout_user
 from datetime import datetime
@@ -21,7 +21,10 @@ def page_not_found(e):
 #---------------------------------------------HOMEPAGE--------------------------------------------------
 @app.route('/')
 def index():
-	return render_template('index.html',current_user=current_user)
+	if current_user.is_authenticated:
+		return render_template('index.html',current_user=current_user)
+	else:
+		return render_template('index.html')
 
 #*******************************************************************************************************
 
@@ -34,7 +37,7 @@ def index():
 # signup for the companies are done at /register page
 @app.route('/register')
 def register():
-	return render_template('signup.html')
+	return render_template('signup1.html')
 #********************************************************************************************************
 
 
@@ -50,11 +53,20 @@ def add_user():
 		uname=result['name'] 
 		uemail=result['email']
 		upassword=result['password']
-		employer=Employer(name=uname,email=uemail,role="Employer")
-		employer.set_password(upassword);
+
+		user=User(email=uemail,user_type="Employer")
+		user.set_password(upassword)
+
+		db.session.add(user)
+		db.session.commit()
+		employer=Employer(name=uname,user_id=user.id)
 		db.session.add(employer)
 		db.session.commit()
+		
+
 		return redirect(url_for('index'))
+	else:
+		return "Oops.! Cannot process this request..!"
 
 #*******************************************************************************************************
 
@@ -86,23 +98,24 @@ def login_companies():
 
 @app.route('/companies/login/authenticate',methods=['POST','GET'])
 def authenticate_company():
+
+	if current_user.is_authenticated:
+		user=User.query.get(current_user.get_id())
+		if not user.user_roll()=="Employer":
+			return "You Don't Permission To Access This Page";
+		# already logged in users will be redirected to homepage
+		else:
+			return redirect(url_for('index'))	
+
 	if request.method=='POST':
 		result=request.form
 		em=result['email']
 		ps=result['password']
-		# result=request.form.get("something", False)
-		if current_user.is_authenticated: 
-			user=Employer.query.get(current_user.get_id())
-			if not user.user_roll()=="Employer":
-				return "You Don't Permission To Access This Page";
-		# already logged in users will be redirected to homepage
-			return "already logged"
-
-		employer=Employer.query.filter_by(email=em).first() # querying database for the user details
-		if employer is None or not employer.check_password(ps):  
-			return render_template('success.html',status=False)
-			# return redirect(url_for('login_companies')) #redirect to login page if authentication fails
-		login_user(employer) #Logging in user if authentication is successfull
+		user=User.query.filter_by(email=em).first()
+		employer=Employer.query.filter_by(user_id=user.id).first() # querying database for the user details
+		if user is None or not user.check_password(ps):  
+			return "We cant find your account or you entered a wrong password"
+		login_user(user) #Logging in user if authentication is successfull
 		return redirect(url_for('index')) # Redirecting to Homepage after successfull authentication
 
 
@@ -112,66 +125,78 @@ def authenticate_company():
 @app.route('/companies/manage/profile')
 def cprofile():
 	if current_user.is_authenticated:
-		user=Employer.query.get(current_user.get_id())
+		user=User.query.get(current_user.get_id())
 		if not user.user_roll()=="Employer":
 			return "You Don't Permission To Access This Page";
-
-		user_data=Employer.query.get(current_user.get_id())
-	return render_template('comprofile.html',user=user_data)
+		employer=Employer.query.filter_by(user_id=user.id).first_or_404()
+		return render_template('comprofile.html',user=employer,email=user.email)
+	else:
+		return redirect(url_for('index'))
+	 
+	
 
 #------------------------------------------COMPANY PROFILE UPDATE----------------------------------------------
 
-@app.route('/companies/edit/profile',methods=['POST','GET'])
+@app.route('/companies/edit/profile',methods=['POST',])
 def profile():
 	if request.method=='POST':
-		data={}
+	 
 		req=request.form
-		if request.form['type']=="basic":
-			if current_user.is_authenticated:
-				user=Employer.query.get(current_user.get_id())
-				if not user.user_roll()=="Employer":
-					return "You Don't Permission To Access This Page";
+		data={}
+	 
+		if current_user.is_authenticated:
+			user=User.query.get(current_user.get_id())
+			# emp=Employer.query.filter_by(user_id=current_user.get_id()).first()
+			if not user.user_roll()=="Employer":
+				return "You Don't have Permission To Access This Page"
 
+			if req['type']=='contact':
+
+
+				#---------CONTACT INFO UPDATE--------------------
+
+				data['phone']=req['phone']
+				data['address']=req['address']
+				data['website']=req['website']
+				data['email']=req['email']
+				
+				employer=Employer.query.filter_by(user_id=current_user.get_id()).first_or_404()
+				employer.website=data['website']
+				employer.address=data['address']
+				employer.phone=data['phone']
+				employer.email=data['email']
+				db.session.commit() #updating the content
+				return redirect(url_for('cprofile'))
+
+			else: 
+				#--------------- BASIC INFO UPDATE-------------
+				data['desc']=req['description']
 				data['name']=req['name']
 				data['since']=req['since']
 				data['size']=req['size']
 				data['domain']=req['domain']
-				data['desc']=req['description']
-				data['type']=req['type']
-				print("----- user is athorized for updation-----")
-				user=Employer.query.get(current_user.get_id())
-				user.name=data['name']
-				user.since=data['since']
-				user.size=data['size']
-				user.domain=data['domain']
-				user.desc=data['desc']
-				db.session.commit() #updating the content
-				print("-----updated-----")
-				return redirect(url_for('index'));
-
-			else:
-				return "you are not logged in"
+				print(data['desc']+data['name']+data['since']+data['size']+data['domain'])
 			
-		else:
-			if current_user.is_authenticated:
-				user=Employer.query.get(current_user.get_id())
-				user.phone=req['phone']
-				user.email=req['email']
-				user.website=req['website']
-				user.address=req['address']
-				db.session.commit();
-				print("---------Contact details of the company updated-------------")
+				employer=Employer.query.filter_by(user_id=current_user.get_id()).first_or_404()
+				employer.name=data['name']
+				employer.since=data['since']
+				employer.teamSize=data['size']
+				employer.domain=data['domain']
+				employer.desc=data['desc']
+				
+				db.session.commit() #updating the content
 				return redirect(url_for('cprofile'))
-	 
+
 	else:
-		return "no request received"
+		return redirect(url_for('login_companies'))
+	 
 
 #*******************************************************************************************************
 #                  JOB POSTING
 # --------------------------------------------------------------------------------------------------------
 @app.route('/companies/manage/jobs/post')
 def postJob():
-	user_data=Employer.query.get(current_user.get_id())
+	user_data=Employer.query.filter_by(user_id=current_user.get_id()).first_or_404()
 	return render_template("post_job.html",user=user_data)
 
 #-------------------add job form request handling--------------------
@@ -181,12 +206,12 @@ def addjob():
 		data={}
 		req=request.form
 		if current_user.is_authenticated:
-			user=Employer.query.get(current_user.get_id())
+			user=User.query.get(current_user.get_id())
 			if not user.user_roll()=="Employer":
 				return "You Don't Permission To Access This Page";
 			data['title']=req['title']
 			data['description']=req['description']
-			data['email']=req['email']
+			#data['email']=req['email']
 			data['type']=req['type']
 			data['category']=req['category']
 			data['experience']=req['experience']
@@ -199,15 +224,15 @@ def addjob():
 			data['city']=req['city']
 			data['address']=req['address']
 			data['openings']=req['openings']
-			user=Employer.query.get(current_user.get_id())
+		  
 			ft=False;
 			if data['type']=='true':
 				ft=True
 			else:
 				ft=False
 			today = datetime.strptime(data['deadline'], '%Y-%m-%d').date()
-			 
-			newjob=Job(title=data['title'],jobdesc=data['description'],exp=data['experience'],qualification=data['qualification'],career_level=data['clevel'],email=data['email'],location=data['address'],fulltime=ft,city=data['city'],salary=data['salary'],employer=user,category=data['category'],openings=data['openings'],expiry_date=today)
+			eid=Employer.query.filter_by(user_id=current_user.get_id()).first_or_404()
+			newjob=Job(title=data['title'],jobdesc=data['description'],exp=data['experience'],qualification=data['qualification'],career_level=data['clevel'],location=data['address'],fulltime=ft,city=data['city'],salary=data['salary'],user_id=eid.id,category=data['category'],openings=data['openings'],expiry_date=today)
 			db.session.add(newjob)
 			db.session.commit()
 			print("-----new job added-----")
@@ -217,9 +242,10 @@ def addjob():
 @app.route('/companies/manage/job')
 def manageJob():
 	if current_user.is_authenticated:
-		user=Employer.query.get(current_user.get_id())
+		user=User.query.get(current_user.get_id())
 		if not user.user_roll()=="Employer":
-			return "You Don't Permission To Access This Page";
+			return "You Don't Permission To Access This Page"
+		employer=Employer.query.filter_by(user_id=current_user.get_id()).first()
 
 		jobs=Job.query.filter_by(user_id=current_user.get_id()).all()
 		# for j in jobs:
@@ -229,8 +255,6 @@ def manageJob():
 			if j.active==True:
 				activeno+=1;
 		rev=reversed(jobs)
-
-		
 		jobposted=len(jobs)
 		 
 		return render_template("jobmanage.html",user=current_user,joblist=rev,posted=jobposted,active=activeno);
@@ -239,7 +263,7 @@ def manageJob():
 @app.route('/jobs/<jobid>')
 def job(jobid):
 	job=Job.query.filter_by(id=jobid).first_or_404()
-	company=Employer.query.get(job.id)
+	company=Employer.query.filter_by(id=job.user_id)
 	return render_template("job.html",details=job,emp=company)
 
 #-------------DELETE JOB----------------
@@ -248,7 +272,7 @@ def job(jobid):
 def deleteJob(jobid):
 	print(" job id : "+str(jobid))
 	if current_user.is_authenticated:
-		user=Employer.query.get(current_user.get_id())
+		user=User.query.get(current_user.get_id())
 		print("user role : "+ user.user_roll())
 		if not user.user_roll()=="Employer":
 			return "Access Denied"
@@ -271,27 +295,53 @@ def deleteJob(jobid):
 @app.route('/jobs/manage/edit/<jobid>')
 def editJob(jobid):
 	print(" job id : "+str(jobid))
-	user=Employer.query.get(current_user.get_id())
+
+	jobdet=Job.query.filter_by(id=jobid).first_or_404();
+	user=User.query.get(current_user.get_id())
+	emp=Employer.query.filter_by(user_id=current_user.get_id()).first_or_404()
 	if current_user.is_authenticated:
-		
-		if not user.user_roll()=="Employer":
+		if not user.user_roll()=="Employer" or not jobdet.user_id==emp.id:
 			return "Access Denied"
 	else:
 		return redirect(url_for('login_companies'))
-	jobdet=Job.query.filter_by(id=jobid).first_or_404();
-	print(jobdet)
-	print(jobdet.title)
-	print(jobdet.salary)
+
 	return render_template('editJob.html',user=user,job=jobdet)
 
+@app.route('/jobs/manage/edit/update/<jobid>/',methods=['POST','GET'])
+def updateJob(jobid):
+	if request.method=='POST':
+		print(" job id : "+str(jobid))
+		user=User.query.get(current_user.get_id())
+		emp=Employer.query.filter_by(user_id=current_user.get_id()).first_or_404()
+		job=Job.query.filter_by(id=jobid).first_or_404();
+		if current_user.is_authenticated:
+		   
+			if not user.user_roll()=="Employer" or not job.user_id==emp.id:
+				return "***Access Denied***"
+		else:
+			return redirect(url_for('login_companies'))
+		req=request.form
 
-
-
-
-
-
-
-
+		job.title=req['title']
+		job.jobdesc=req['description']
+		print("-----------------REACHED HERE____________________")
+		job.email=req['email']
+		job.type=req['type']
+		job.category=req['category']
+		job.experience=req['experience']
+		job.salary=req['salary']
+		job.clevel=req['clevel']
+		job.industry=req['clevel']
+		job.qualification=req['qualification']
+		job.deadline=req['deadline']
+		job.country=req['country']
+		job.city=req['city']
+		job.address=req['address']
+		job.openings=req['openings']
+		print("-----------------REACHED HERE____________________")
+		# return redirect(url_for('manageJob'))
+		db.session.commit()
+		return redirect(url_for('manageJob'))
 
 #---------------------------------------LOGOUT PAGE-----------------------------------------------------
 
