@@ -33,7 +33,6 @@ class User(db.Model,UserMixin):
 	def check_password(self, password):
 		return check_password_hash(self.password_hash, password)
 
-
 class Employer(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(64), index=True, unique=True, nullable=False)
@@ -50,6 +49,8 @@ class Employer(db.Model):
 	posts=db.relationship('Job', backref='employer')
 	user_id=db.Column(db.Integer,db.ForeignKey('user.id'))
 	#-------------------
+
+
 class Job(db.Model):
 	# __table__='job'
 	id=db.Column(db.Integer,primary_key=True) 
@@ -70,9 +71,12 @@ class Job(db.Model):
 	country=db.Column(db.String(100))
 	city=db.Column(db.String(100))
 	active=db.Column(db.Boolean,default=True);
-
 	#--------------RELATIONSHIP------------------------------
 	user_id=db.Column(db.Integer,db.ForeignKey('employer.id'))
+
+ 
+
+
     
 	 
 
