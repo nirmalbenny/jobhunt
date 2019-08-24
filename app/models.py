@@ -48,7 +48,43 @@ class Employer(db.Model):
 	#----------------------Relationship----------------------
 	posts=db.relationship('Job', backref='employer')
 	user_id=db.Column(db.Integer,db.ForeignKey('user.id'))
+
+
+
 	#-------------------
+class jobseeker(db.Model):
+	__tablename__="jobseeker"
+	id=db.Column(db.Integer,primary_key=True) 
+	name=db.Column(db.String(100))	
+	bio=db.Column(db.String(1000))	
+	dob=db.Column(db.DateTime)	
+	edu_level=db.Column(db.String(100))
+	job_title=db.Column(db.String(100))
+	#-------USER ID---FORIENG KEY FROM USER TABLE------------
+	user_id=db.Column(db.Integer,db.ForeignKey('user.id'))
+	#--------SKILLS TABLE--------RELATIONSHIP----------------
+	skills=db.relationship('JobSeekerSkills', backref='jobseeker')
+
+
+class skills(db.Model):
+	__tablename__="skills"
+	id=db.Column(db.Integer,primary_key=True) 
+	skill_name=db.Column(db.String(100))
+	jobseekerskills=db.relationship('JobSeekerSkills', backref='skills_id')
+
+
+class JobSeekerSkills(db.Model):
+	__tablename__="JobSeekerSkills"
+	id=db.Column(db.Integer,primary_key=True) 
+	jobseeker_id=db.Column(db.Integer,db.ForeignKey('user'))
+	skills_id=db.Column(db.Integer,db.ForeignKey('jobseeker.id'))
+
+
+
+
+
+
+
 
 
 class Job(db.Model):
