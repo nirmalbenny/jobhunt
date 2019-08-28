@@ -21,10 +21,8 @@ class User(db.Model,UserMixin):
 	#relationship-----------------
 	useremp=db.relationship('Employer', backref='user')
 	# user=db.relationship('Employer', backref='employer')
-
 	def user_roll(self):
 		return self.user_type
-
 	#-----------Password Hashing---------------------------------
 	def set_password(self, password):
 		self.password_hash = generate_password_hash(password)
@@ -48,10 +46,7 @@ class Employer(db.Model):
 	#----------------------Relationship----------------------
 	posts=db.relationship('Job', backref='employer')
 	user_id=db.Column(db.Integer,db.ForeignKey('user.id'))
-
-
-
-	#-------------------
+	#--------------------------------------------------------
 class jobseeker(db.Model):
 	__tablename__="jobseeker"
 	id=db.Column(db.Integer,primary_key=True) 
@@ -62,20 +57,26 @@ class jobseeker(db.Model):
 	job_title=db.Column(db.String(100))
 	#-------USER ID---FORIENG KEY FROM USER TABLE------------
 	user_id=db.Column(db.Integer,db.ForeignKey('user.id'))
+
 	#--------SKILLS TABLE--------RELATIONSHIP----------------
 	skills=db.relationship('JobSeekerSkills', backref='jobseeker')
+
 
 class skills(db.Model):
 	__tablename__="skills"
 	id=db.Column(db.Integer,primary_key=True) 
 	skill_name=db.Column(db.String(100))
-	jobseekerskills=db.relationship('JobSeekerSkills', backref='skills_id')
+	level=db.Column(db.Integer)
+	# jobseekerskills=db.relationship('JobSeekerSkills', backref='skills_id')
+
 
 class JobSeekerSkills(db.Model):
 	__tablename__="JobSeekerSkills"
 	id=db.Column(db.Integer,primary_key=True) 
-	jobseeker_id=db.Column(db.Integer,db.ForeignKey('jobseeker.id'))
-	skills_id=db.Column(db.Integer,db.ForeignKey('skills_id.id'))
+	seekerId=db.Column(db.Integer,db.ForeignKey('jobseeker.id'))
+	skill=db.Column(db.Integer,db.ForeignKey('skills_id.id'))
+
+
 
 class Job(db.Model):
 	# __table__='job'
@@ -100,11 +101,6 @@ class Job(db.Model):
 	#--------------RELATIONSHIP------------------------------
 	user_id=db.Column(db.Integer,db.ForeignKey('employer.id'))
 
- 
-
-
-    
-	 
 
 #-----------------------------------------------------------------
 
