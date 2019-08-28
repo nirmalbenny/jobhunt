@@ -59,24 +59,35 @@ class jobseeker(db.Model):
 	user_id=db.Column(db.Integer,db.ForeignKey('user.id'))
 
 	#--------SKILLS TABLE--------RELATIONSHIP----------------
-	skills=db.relationship('JobSeekerSkills', backref='jobseeker')
+	skills_list=db.relationship('JobSeekerSkills', backref='jobseeker')
+	#---------Education | Institution   --------------------
+	education=db.relationship('education',backref="jobseeker")
+
+class education(db.Model):
+	id=db.Column(db.Integer,primary_key=True)
+	college_name=db.Column(db.String(100))
+	course=db.Column(db.String(100))
+	start=db.Column(db.DateTime)
+	end=db.Column(db.DateTime)
+	seekerId=db.Column(db.Integer,db.ForeignKey('jobseeker.id'))
+	
 
 
-class skills(db.Model):
-	__tablename__="skills"
-	id=db.Column(db.Integer,primary_key=True) 
-	skill_name=db.Column(db.String(100))
+
+
+class skill(db.Model):
+	__tablename__="skill"
+	id=db.Column(db.Integer,primary_key=True)
+	name=db.Column(db.String(100))
 	level=db.Column(db.Integer)
-	# jobseekerskills=db.relationship('JobSeekerSkills', backref='skills_id')
+	skills_table=db.relationship('JobSeekerSkills',backref="skill")
 
 
 class JobSeekerSkills(db.Model):
 	__tablename__="JobSeekerSkills"
 	id=db.Column(db.Integer,primary_key=True) 
 	seekerId=db.Column(db.Integer,db.ForeignKey('jobseeker.id'))
-	skill=db.Column(db.Integer,db.ForeignKey('skills_id.id'))
-
-
+	skill_id = db.Column(db.Integer, db.ForeignKey('skill.id'))
 
 class Job(db.Model):
 	# __table__='job'
@@ -100,6 +111,8 @@ class Job(db.Model):
 	active=db.Column(db.Boolean,default=True);
 	#--------------RELATIONSHIP------------------------------
 	user_id=db.Column(db.Integer,db.ForeignKey('employer.id'))
+
+
 
 
 #-----------------------------------------------------------------
